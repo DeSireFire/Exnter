@@ -54,6 +54,7 @@ class Html_Downloader(object):
                         return r
                 except Exception:
                     count += 1
+                    print("重试次数 %s" %count)
 
         return None
 

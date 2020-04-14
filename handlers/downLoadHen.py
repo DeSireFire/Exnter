@@ -16,10 +16,14 @@ import random,os
 
 
 async def Img_Down(dirName, fileName, url):
-    imgByt = Html_Downloader.download(url)
-    if imgByt:
-        save_file_byte(dirName,fileName,imgByt.content)
-        return imgByt.content
+    re_rule = '<img id="img" src="(.*?)" style='
+    subPags = Html_Downloader.download(url)
+    if subPags:
+        imgurl = ''.join(Html_Downloader.reglux(subPags.text, re_rule, False))
+        imgbyt = Html_Downloader.download(imgurl)
+        if imgbyt:
+            save_file_byte(dirName, fileName, imgbyt.content)
+            return imgbyt.content
     return None
 
 
@@ -40,14 +44,15 @@ async def Img_Down_Crontab(bookData = None):
     :return:
     """
     if bookData:
-        dirName = bookData["title"]
-        urls = list(enumerate(bookData["imgUrlList"]))
+        dirName = bookData["gid"]
+        urls = list(enumerate(bookData["subPagesList"]))
         for url in urls:
             fileName = str(url[0]+1)+".jpg"
             job = Img_Down(dirName, fileName, url[-1])
             print(url)
-            taskRes = asyncio.create_task(job,name=url)
+            taskRes = asyncio.create_task(job, name=url)
             # await taskRes
+            await asyncio.sleep(0.1)
     return None
 
 def downLoaderSave(bookData):

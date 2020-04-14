@@ -15,16 +15,16 @@ from comm.webGet import Html_Downloader
 class GetBooksInfo(object):
     def __init__(self, book_url=None):
         self.bookHtml = ''
-        self.book_id = ""
+        self.book_id = book_url.split("/")[4]
         self.book_url = book_url
 
         # re
         self.book_idRE = "https://exhentai.org/g/(\d*?)/.*/"
-        self.titleRE = "<title>(.*?)</title>"
+        self.titleRE = "<title>(.*?) - ExHentai.org</title>"
 
         self.bookInfo = {
             "url": self.book_url,
-            "id": self.book_id,
+            "gid": self.book_id,
             "title": "unknown",
             "total": 0,
             "getTotal": 0,
@@ -35,7 +35,7 @@ class GetBooksInfo(object):
         if self.book_url:
             self.bookHtml = Html_Downloader.download(self.book_url).text or ''
             self.book_id = ''.join(Html_Downloader.reglux(self.book_url, self.book_idRE, False))
-            self.bookInfo["title"] = ''.join(Html_Downloader.reglux(self.book_url, self.titleRE, False))
+            self.bookInfo["title"] = ''.join(Html_Downloader.reglux(self.bookHtml, self.titleRE, False))
 
     def get_group_pages(self):
         '''

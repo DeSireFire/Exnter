@@ -23,9 +23,9 @@ async def demo():
 
 async def dem2o():
     test = {'name':'dem2o'}
-    for i in range(1,10):
+    for i in range(1, 10):
         print('bye ...')
-        ts = random.randint(1,10)
+        ts = random.randint(1, 10)
         await asyncio.sleep(ts)
         print('... World!')
         test[i] = ts
